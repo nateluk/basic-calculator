@@ -25,6 +25,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String equationInputs = '';
+  String answer = '';
+
   final List<String> buttons = [
     'C',
     '+/-',
