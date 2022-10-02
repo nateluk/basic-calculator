@@ -4,25 +4,30 @@ class MyButton extends StatelessWidget {
   MyButton(
       {required this.backgroundColour,
       required this.textColour,
-      required this.buttonText});
+      required this.buttonText,
+      required this.buttonTapped});
 
-  final Color backgroundColour;
-  final Color textColour;
-  final String buttonText;
+  final backgroundColour;
+  final textColour;
+  final buttonText;
+  final buttonTapped;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
-        child: Container(
-          color: backgroundColour,
-          child: Center(
-              child: Text(
-            buttonText,
-            style: TextStyle(color: textColour, fontSize: 25),
-          )),
+    return GestureDetector(
+      onTap: buttonTapped,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30),
+          child: Container(
+            color: backgroundColour,
+            child: Center(
+                child: Text(
+              buttonText,
+              style: TextStyle(color: textColour, fontSize: 25),
+            )),
+          ),
         ),
       ),
     );
