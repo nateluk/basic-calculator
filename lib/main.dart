@@ -1,5 +1,6 @@
 import 'package:calculator/buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   return runApp(MyApp());
@@ -10,7 +11,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
@@ -26,7 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String equationInputs = '';
-  String answer = '';
+  String answer = '0';
 
   final List<String> buttons = [
     'C',
@@ -63,6 +64,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    void evaluateExpression() {
+      Parser p = Parser();
+      Expression exp = p.parse(equationInputs);
+      double expAnswer = exp.evaluate(EvaluationType.REAL, ContextModel());
+      answer = expAnswer.toString();
+    }
+
+    void createPercentage() {
+      Parser p = Parser();
+      Expression exp = p.parse(equationInputs);
+      double expAnswer = exp.evaluate(EvaluationType.REAL, ContextModel());
+      answer = expAnswer.toString();
+    }
+
     return Scaffold(
       backgroundColor: Colors.purple[100],
       body: Column(children: [
@@ -87,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.centerRight,
                 child: Text(
                   answer,
-                  style: TextStyle(fontSize: 25),
+                  style: TextStyle(fontSize: 45),
                 ),
               ),
             ],
@@ -101,18 +116,23 @@ class _HomePageState extends State<HomePage> {
               gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
               itemBuilder: (context, index) {
+                // clear button
                 if (index == 0) {
                   return MyButton(
                     buttonTapped: () {
                       setState(() {
                         equationInputs = '';
+                        answer = '0';
                       });
                     },
                     backgroundColour: Colors.red,
                     textColour: Colors.white,
                     buttonText: buttons[index],
                   );
-                } else if (index == 1) {
+                }
+
+                // delete button
+                else if (index == 1) {
                   return MyButton(
                     buttonTapped: () {
                       if (equationInputs.isNotEmpty) {
@@ -126,7 +146,43 @@ class _HomePageState extends State<HomePage> {
                     textColour: Colors.white,
                     buttonText: buttons[index],
                   );
-                } else {
+                } else if (buttons[index] == '%') {
+                  return MyButton(
+                    buttonTapped: () {
+                      setState(() {
+                        evaluateExpression();
+                      });
+                    },
+                    backgroundColour: isOperator(buttons[index])
+                        ? Colors.deepPurple
+                        : Colors.deepPurple[50],
+                    textColour: isOperator(buttons[index])
+                        ? Colors.white
+                        : Colors.deepPurple,
+                    buttonText: buttons[index],
+                  );
+                }
+
+                // equals btton
+                else if (buttons[index] == '=') {
+                  return MyButton(
+                    buttonTapped: () {
+                      setState(() {
+                        evaluateExpression();
+                      });
+                    },
+                    backgroundColour: isOperator(buttons[index])
+                        ? Colors.deepPurple
+                        : Colors.deepPurple[50],
+                    textColour: isOperator(buttons[index])
+                        ? Colors.white
+                        : Colors.deepPurple,
+                    buttonText: buttons[index],
+                  );
+                }
+
+                // other buttons
+                else {
                   return MyButton(
                     buttonTapped: () {
                       setState(() {
